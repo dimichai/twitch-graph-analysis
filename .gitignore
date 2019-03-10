@@ -60,3 +60,9 @@ target/
 \.DS_Store
 
 \.idea/
+
+bearer_tokens\.txt
+
+client_ids\.txt
+
+data/
