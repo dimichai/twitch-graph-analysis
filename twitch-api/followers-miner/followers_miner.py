@@ -1,7 +1,9 @@
 import json
+import os
 import string
 import requests
 import time
+import csv
 
 
 class FollowersMiner:
@@ -80,14 +82,27 @@ class FollowersMiner:
                 valid_requests += 1
 
                 # for user in json_data['data']:
-                with open('data/' + self.start_point + '.json', 'w') as f:
-                    json.dump(json_data['data'], f)
+                # with open('data/' + self.start_point + '.json', 'w') as f:
+                #     json.dump(json_data['data'], f)
+                #
+                #     total_mined += 20
 
-                    total_mined += 20
+                filename = 'data/' + self.start_point + '.csv'
+                file_exists = os.path.isfile(filename)
+                with open(filename, 'a') as f:
+                    fieldnames = ['from_id', 'from_name', 'to_id', 'to_name', 'followed_at']
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+                    if not file_exists:
+                        writer.writeheader()
+
+                    for data in json_data['data']:
+                        writer.writerow(data)
+                        total_mined += 1
 
                 print('Mined so far: ' + str(total_mined))
             except:
-                print(json_data)
+                # print(json_data)
                 if json_data['error']:
                     # Update current token index
                     print('Timed out - Switching to the next token.')
@@ -96,5 +111,7 @@ class FollowersMiner:
         end_time = time.time()
         print('Total users mined: ' + str(total_mined))
         print('Total valid requests: ' + str(valid_requests))
-        print('Total time elapsed:' + str(end_time - start_time))
+        print('Total time elapsed: ' + str(end_time - start_time))
         print('Cursor to use for the next request: ' + self.cursor)
+        with open('cursors/' + self.start_point + '.txt', 'w') as f:
+            f.write(self.cursor)
