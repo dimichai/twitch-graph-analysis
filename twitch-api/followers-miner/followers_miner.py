@@ -44,11 +44,17 @@ class FollowersMiner:
 
         url = f'{self.USERS_ENDPOINT}?login={self.start_point}'
         if login:
-            r = requests.get(url, headers={'Client-ID': self.client_id})
-            json = r.json()
-            if json['data']:
-                if len(json['data']) > 0:
-                    return json['data'][0]['id']
+            try:
+                headers = {'Authorization': 'Bearer ' + self._get_current_token()}
+                r = requests.get(url, headers=headers)
+                json = r.json()
+                if json['data']:
+                    if len(json['data']) > 0:
+                        return json['data'][0]['id']
+            except KeyError:
+                print(json)
+                return None
+
         return None
 
     def _get_current_token(self) -> string:
@@ -62,13 +68,13 @@ class FollowersMiner:
 
     def mine_followers(self):
         user_id = self.get_userid_by_login(self.start_point)
-        # Pagination cursor from Twitch API
         total_mined = 0
         valid_requests = 0
 
         start_time = time.time()
         while total_mined < self.mined_limit:
             url = f'{self.USERS_ENDPOINT}/follows?to_id={user_id}'
+            url += '&first=100'
             if self.cursor:
                 url += '&after=' + self.cursor
 
@@ -101,6 +107,8 @@ class FollowersMiner:
                         total_mined += 1
 
                 print('Mined so far: ' + str(total_mined))
+            except KeyError:
+                break
             except:
                 # print(json_data)
                 if json_data['error']:

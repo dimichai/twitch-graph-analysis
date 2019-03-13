@@ -66,3 +66,5 @@ bearer_tokens\.txt
 client_ids\.txt
 
 data/
+
+cursors/

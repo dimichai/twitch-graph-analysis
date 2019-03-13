@@ -1,6 +1,8 @@
 import sys
 import json
 from followers_miner import FollowersMiner
+import os
+
 
 def read_lines_from_file(filename):
     with open(filename) as f:
@@ -29,6 +31,13 @@ if __name__ == '__main__':
 
         for user in usernames:
             username = user['name']
+            # look for cursor file
+            cursor = None
+            cursor_file = 'cursors/' + username + '.txt'
+            if os.path.isfile(cursor_file):
+                with open(cursor_file) as f:
+                    cursor = f.readline()
+
             print('Mining followes of: ' + username)
-            miner = FollowersMiner(clientid, tokens, username, 1000, None)
+            miner = FollowersMiner(clientid, tokens, start_point=username, mined_limit=100000, cursor=cursor)
             miner.mine_followers()
