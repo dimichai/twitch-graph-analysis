@@ -4,4 +4,6 @@ Twitch.tv is the biggest livestreaming platform on the internet. More than 15 mi
 
 The report can be found [here](./report.pdf).
 
-![alt text](figures/2019.png)
+![2019_community_graph](figures/2019.png)
+
+![sankey](figures/sankey.png)
