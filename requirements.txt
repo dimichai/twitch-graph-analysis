@@ -13,7 +13,7 @@ incremental==17.5.0
 lxml==4.3.2
 mkl-fft==1.0.10
 mkl-random==1.0.2
-numpy==1.16.2
+numpy==1.22.0
 pandas==0.24.1
 parsel==1.5.1
 pyasn1==0.4.5
